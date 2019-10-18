@@ -3,6 +3,7 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 
 const db = admin.firestore();
+const auth = admin.auth();
 
 exports.createUser = functions.auth.user().onCreate((user) => {
   const SIZE = 100;
@@ -25,4 +26,17 @@ exports.createUser = functions.auth.user().onCreate((user) => {
     }
   );
   batch.commit();
+});
+
+exports.verifyEmail = functions.https.onCall((data) => {
+  return auth.getUserByEmail(data.email).then((user) => {
+    return db.collection('/users')
+      .doc(user.uid)
+      .update({ emailVerified: 1 })
+      .then(() => {
+        return { message: 'success' };
+      }).catch(({ message }) => {
+      throw new functions.https.HttpsError(message);
+    });
+  });
 });

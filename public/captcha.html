@@ -28,7 +28,7 @@
     const container = document.createElement('div');
     container.id = containerId;
     document.body.appendChild(container);
-    var captcha = new firebase.auth.RecaptchaVerifier(containerId, {
+    const captcha = new firebase.auth.RecaptchaVerifier(containerId, {
       'size': 'normal',
       'callback': function(token) {
         callback(token);
