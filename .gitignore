@@ -1,3 +1,8 @@
+# JS bundle
+/node_modules
+/public/assets/**/*.js
+*.map
+
 # Logs
 logs
 *.log

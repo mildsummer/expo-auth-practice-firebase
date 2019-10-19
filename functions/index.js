@@ -32,11 +32,11 @@ exports.verifyEmail = functions.https.onCall((data) => {
   return auth.getUserByEmail(data.email).then((user) => {
     return db.collection('/users')
       .doc(user.uid)
-      .update({ emailVerified: 1 })
+      .update({ emailVerifiedAt: admin.firestore.Timestamp.fromDate(new Date()) })
       .then(() => {
         return { message: 'success' };
       }).catch(({ message }) => {
-      throw new functions.https.HttpsError(message);
-    });
+        throw new functions.https.HttpsError(message);
+      });
   });
 });
