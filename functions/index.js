@@ -8,23 +8,23 @@ const auth = admin.auth();
 exports.createUser = functions.auth.user().onCreate((user) => {
   const SIZE = 100;
   const batch = db.batch();
-  for (let i = 0; i < SIZE; i++) {
-    batch.set(
-      db.collection('/posts').doc(),
-      {
-        author: user.uid,
-        text: 'test',
-        order: i
-      }
-    );
-  }
+  const userRef = db.collection('/users').doc(user.uid);
   batch.set(
-    db.collection('/users').doc(user.uid),
+    userRef,
     {
       email: user.email,
       postsSize: SIZE
     }
   );
+  for (let i = 0; i < SIZE; i++) {
+    batch.set(
+      userRef.collection('/posts').doc(),
+      {
+        text: 'test',
+        order: i
+      }
+    );
+  }
   batch.commit();
 });
 
